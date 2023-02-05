@@ -46,9 +46,38 @@ module.exports = grammar({
       $.string,
     ),
 
-    identifier: $ => /[a-zA-Z0-9_]+/,
+    number: $ => prec.right(400, choice(
+      /0[xX][0-9a-fA-F]+/,
+      $._digits,
+      seq(
+        optional($._digits), 
+        ".", 
+        $._digits,
+        optional(seq("e-", $._digits))
+      ),
+      /[0-9]*\.[0-9]+e[0-9]+/
+    )),
 
-    operator: $ => /[:\.\'\~\!@\$%\^\&\*\-\+\/=\{\}\[\]\|\\<>\?]+/,
+    identifier: $ => prec(1, choice(
+      /[a-zA-Z_]+[a-zA-Z_0-9]*/,
+      /[0-9]+[a-zA-Z_]+[a-zA-Z0-9_]*/
+    )),
+
+    comment: $ => choice(
+      seq('//', /.*/),
+      /\#.*/,
+      seq(
+        '/*',
+        /[^*]*\*+([^/*][^*]*\*+)*/,
+        '/'
+      ),
+    ),
+    
+    operator: $ => prec.right(choice(
+      /[:.'~!@$%^&*\-+={}\[\]|\\<>?]+[:.'~!@$%^&*\-+\/={}\[\]|\\<>?]*/,
+      /\/[:.'~!@$%^&\-+={}\[\]|\\<>?]*/,
+      /\/[:.'~!@$%^&\-+={}\[\]|\\<>?]+[:.'~!@$%^&*\-+\/={}\[\]|\\<>?]*/
+    )),
 
     string: $ => choice(
       /"(([^"])|(\\"))*[^\\]"/,
@@ -68,20 +97,6 @@ module.exports = grammar({
     _whitespace: $ => repeat1(
       choice("\r", "\n")
     ),
-
-    comment: $ => choice(
-      /\/\*[^(\*\/)]*\*\//,
-      /\/\/[^\n]*\n/,
-      /\#[^\n]*\n/
-    ),
-
-    number: $ => prec.left(choice(
-      /0[xX][0-9a-fA-F]*/,
-      $._digits,
-      seq(".", $._digits),
-      seq($._digits, ".", $._digits, optional(seq(
-        "e", optional("-"), $._digits
-    ))))),
 
     _digits: $ => /[0-9]+/,
   }

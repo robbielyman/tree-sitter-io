@@ -35,6 +35,11 @@
     "fields": {}
   },
   {
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "message",
     "named": true,
     "fields": {},
@@ -71,6 +76,11 @@
   },
   {
     "type": "number",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "operator",
     "named": true,
     "fields": {}
   },
@@ -135,11 +145,19 @@
     "named": false
   },
   {
-    "type": "-",
+    "type": ".",
     "named": false
   },
   {
-    "type": ".",
+    "type": "/",
+    "named": false
+  },
+  {
+    "type": "/*",
+    "named": false
+  },
+  {
+    "type": "//",
     "named": false
   },
   {
@@ -155,16 +173,8 @@
     "named": false
   },
   {
-    "type": "e",
+    "type": "e-",
     "named": false
-  },
-  {
-    "type": "identifier",
-    "named": true
-  },
-  {
-    "type": "operator",
-    "named": true
   },
   {
     "type": "{",

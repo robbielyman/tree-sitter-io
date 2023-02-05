@@ -285,13 +285,149 @@
         }
       ]
     },
+    "number": {
+      "type": "PREC_RIGHT",
+      "value": 400,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "0[xX][0-9a-fA-F]+"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_digits"
+          },
+          {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_digits"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "STRING",
+                "value": "."
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_digits"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "e-"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "_digits"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "PATTERN",
+            "value": "[0-9]*\\.[0-9]+e[0-9]+"
+          }
+        ]
+      }
+    },
     "identifier": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z0-9_]+"
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[a-zA-Z_]+[a-zA-Z_0-9]*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[0-9]+[a-zA-Z_]+[a-zA-Z0-9_]*"
+          }
+        ]
+      }
+    },
+    "comment": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "//"
+            },
+            {
+              "type": "PATTERN",
+              "value": ".*"
+            }
+          ]
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\#.*"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "/*"
+            },
+            {
+              "type": "PATTERN",
+              "value": "[^*]*\\*+([^/*][^*]*\\*+)*"
+            },
+            {
+              "type": "STRING",
+              "value": "/"
+            }
+          ]
+        }
+      ]
     },
     "operator": {
-      "type": "PATTERN",
-      "value": "[:\\.\\'\\~\\!@\\$%\\^\\&\\*\\-\\+\\/=\\{\\}\\[\\]\\|\\\\<>\\?]+"
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[:.'~!@$%^&*\\-+={}\\[\\]|\\\\<>?]+[:.'~!@$%^&*\\-+\\/={}\\[\\]|\\\\<>?]*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\/[:.'~!@$%^&\\-+={}\\[\\]|\\\\<>?]*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\/[:.'~!@$%^&\\-+={}\\[\\]|\\\\<>?]+[:.'~!@$%^&*\\-+\\/={}\\[\\]|\\\\<>?]*"
+          }
+        ]
+      }
     },
     "string": {
       "type": "CHOICE",
@@ -381,103 +517,6 @@
           {
             "type": "STRING",
             "value": "\n"
-          }
-        ]
-      }
-    },
-    "comment": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "PATTERN",
-          "value": "\\/\\*[^(\\*\\/)]*\\*\\/"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\/\\/[^\\n]*\\n"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\#[^\\n]*\\n"
-        }
-      ]
-    },
-    "number": {
-      "type": "PREC_LEFT",
-      "value": 0,
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "0[xX][0-9a-fA-F]*"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_digits"
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "."
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_digits"
-              }
-            ]
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "_digits"
-              },
-              {
-                "type": "STRING",
-                "value": "."
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_digits"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": "e"
-                      },
-                      {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "STRING",
-                            "value": "-"
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "_digits"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              }
-            ]
           }
         ]
       }
