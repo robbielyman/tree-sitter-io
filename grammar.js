@@ -3,21 +3,28 @@ module.exports = grammar({
   extras: $ => [],
 
   rules: {
-    source_file: $ => repeat($._expression),
+    source_file: $ => choice(
+      repeat($.expression),
+    ),
 
-    _expression: $ => prec(2,choice(
-      $.message,
-      choice($._separator, $._terminator, $.comment)
+    expression: $ => prec.right(seq(
+      choice(
+        repeat1($.message),
+        repeat1(choice(
+          $._whitespace, $._separator, $.comment
+      ))),
+      optional($._terminator)
     )),
     
     message: $ => prec.left(seq(
-      optional(choice($._separator, $._whitespace, $.comment)),
+      repeat(choice($._whitespace, $._separator, $.comment)),
       $._symbol,
-      optional(choice($._separator, $.comment)),
-      optional($.arguments)
-    )),
+      optional(seq(
+        repeat(choice($._separator, $.comment)),
+        $.arguments
+    )))),
 
-    arguments: $ => choice(
+    arguments: $ => prec.right(3,choice(
       seq(
         "(",
         optional(seq($.argument, repeat(seq(",", $.argument)))),
@@ -33,11 +40,9 @@ module.exports = grammar({
         optional(seq($.argument, repeat(seq(",", $.argument)))),
         "}"
       )
-    ),
+    )),
 
-    argument: $ => seq(
-      repeat1($.message),
-    ),
+    argument: $ => $.expression,
 
     _symbol: $ => choice(
       $.identifier,
@@ -46,24 +51,14 @@ module.exports = grammar({
       $.string,
     ),
 
-    number: $ => prec.right(400, choice(
+    number: $ => choice(
       /0[xX][0-9a-fA-F]+/,
-      $._digits,
-      seq(
-        optional($._digits), 
-        ".", 
-        $._digits,
-        optional(seq("e-", $._digits))
-      ),
-      /[0-9]*\.[0-9]+e[0-9]+/
-    )),
+      /[0-9]*\.?[0-9]+(e[0-9]+|(e\-[0-9]+))?/
+    ),
 
-    identifier: $ => prec(1, choice(
-      /[a-zA-Z_]+[a-zA-Z_0-9]*/,
-      /[0-9]+[a-zA-Z_]+[a-zA-Z0-9_]*/
-    )),
+    identifier: $ => /[a-zA-Z_]+[a-zA-Z_0-9]*/,
 
-    comment: $ => choice(
+    comment: $ => prec.right(4, choice(
       seq('//', /.*/),
       /\#.*/,
       seq(
@@ -71,13 +66,9 @@ module.exports = grammar({
         /[^*]*\*+([^/*][^*]*\*+)*/,
         '/'
       ),
-    ),
-    
-    operator: $ => prec.right(choice(
-      /[:.'~!@$%^&*\-+={}\[\]|\\<>?]+[:.'~!@$%^&*\-+\/={}\[\]|\\<>?]*/,
-      /\/[:.'~!@$%^&\-+={}\[\]|\\<>?]*/,
-      /\/[:.'~!@$%^&\-+={}\[\]|\\<>?]+[:.'~!@$%^&*\-+\/={}\[\]|\\<>?]*/
     )),
+    
+    operator: $ => /[:'.~!@#$%^&*\-\+=(){}\[\]\\<>\/?]+/,
 
     string: $ => choice(
       /"(([^"])|(\\"))*[^\\]"/,
@@ -85,19 +76,20 @@ module.exports = grammar({
     ),
 
     _terminator: $ => prec.left(2, choice(
-      seq($._separator, ";"),
+      seq(optional($._separator), ";"),
       "\n",
       seq("\r", $._separator)
     )),
 
-    _separator: $ => repeat1(
+    _separator: $ => prec.right(repeat1(
       choice(" ", "\f", "\t", "\v")
-    ),
+    )),
 
-    _whitespace: $ => repeat1(
+    _whitespace: $ => prec.right(repeat1(
       choice("\r", "\n")
-    ),
+    )),
 
     _digits: $ => /[0-9]+/,
+
   }
 })

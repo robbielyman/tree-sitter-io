@@ -14,14 +14,15 @@ numbers
 --------------------------------------------------------------------------------
 
 (source_file
-  (message (number))
-  (message (number))
-  (message (number))
-  (message (number))
-  (message (number))
-  (message (number))
-  (message (identifier))
-  (message (identifier)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number)))
+  (expression (message (number))
+    (message (identifier))))
 
 ================================================================================
 identifiers
@@ -35,10 +36,11 @@ m3mm444
 --------------------------------------------------------------------------------
 
 (source_file
-  (message (identifier))
-  (message (identifier))
-  (message (identifier))
-  (message (identifier)))
+  (expression (message (number))
+    (message (identifier)))
+  (expression (message (identifier)))
+  (expression (message (identifier)))
+  (expression (message (identifier))))
 
 ================================================================================
 comments
@@ -53,7 +55,60 @@ also still a comment */
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
-  (comment)
-  (comment))
+  (expression (comment))
+  (expression (comment))
+  (expression (comment))
+  (expression (comment)))
+
+================================================================================
+expressions
+================================================================================
+
+this is an expression
+i + 1
+i==2
+2e1e4
+if( # this is a comment
+  i == 0,
+  /* this is a comment */
+  false, true)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (expression
+    (message (identifier))
+    (message (identifier))
+    (message (identifier))
+    (message (identifier)))
+  (expression
+    (message (identifier))
+    (message (operator))
+    (message (number)))
+  (expression
+    (message (identifier))
+    (message (operator))
+    (message (number)))
+  (expression
+    (message (number))
+    (message (identifier)))
+  (expression
+    (message
+      (identifier)
+      (arguments
+        (argument
+          (expression
+            (message
+              (comment)
+              (identifier))
+            (message (operator))
+            (message (number))))
+        (argument
+          (expression
+            (message
+              (comment)
+              (identifier))))
+        (argument
+          (expression
+            (message
+              (identifier))))))))

@@ -4,11 +4,11 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "message",
+          "type": "expression",
           "named": true
         }
       ]
@@ -35,9 +35,23 @@
     "fields": {}
   },
   {
-    "type": "identifier",
+    "type": "expression",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "message",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "message",
@@ -80,11 +94,6 @@
     "fields": {}
   },
   {
-    "type": "operator",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "source_file",
     "named": true,
     "fields": {},
@@ -93,11 +102,7 @@
       "required": false,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "message",
+          "type": "expression",
           "named": true
         }
       ]
@@ -145,10 +150,6 @@
     "named": false
   },
   {
-    "type": ".",
-    "named": false
-  },
-  {
     "type": "/",
     "named": false
   },
@@ -173,8 +174,12 @@
     "named": false
   },
   {
-    "type": "e-",
-    "named": false
+    "type": "identifier",
+    "named": true
+  },
+  {
+    "type": "operator",
+    "named": true
   },
   {
     "type": "{",
